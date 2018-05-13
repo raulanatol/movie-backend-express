@@ -1,31 +1,22 @@
 const express = require('express');
 const router = express.Router();
-const files = require("../../utils/files");
-
-let movies;
-files.loadMovies(moviesData => movies = moviesData);
+const controller = require('./controller');
 
 router.get('/like', (req, res) => {
-  const likeMovies = movies.filter(movie => movie.like === true);
-  res.json(likeMovies);
+  res.json(controller.getLikes());
 });
 
 router.get('/:id', (req, res) => {
-  const movieId = req.params.id;
-  const movie = movies.find(movie => movie.id === movieId);
-  res.json(movie);
+  res.json(controller.getMovie(req.params.id));
 });
 
 router.get('/', (req, res) => {
-  res.json(movies);
+  res.json(controller.getMovies());
 });
 
 router.post('/', (req, res) => {
   const movie = req.body;
-  movie.id = `${movies.length + 1}`;
-  movies.push(movie);
-
-  files.saveMovies(movies, err => {
+  controller.newMovie(movie, (err, movies) => {
     if (err) {
       res.error(err);
     } else {
@@ -35,13 +26,7 @@ router.post('/', (req, res) => {
 });
 
 router.put('/', (req, res) => {
-  const movieId = req.body.id;
-  let moviePosition = movies.findIndex(movie => movie.id === movieId);
-  if (moviePosition >= 0) {
-    movies[moviePosition] = req.body;
-  }
-
-  files.saveMovies(movies, err => {
+  controller.updateMovie(req.body, (err, movies) => {
     if (err) {
       res.error(err);
     } else {
@@ -51,13 +36,7 @@ router.put('/', (req, res) => {
 });
 
 router.delete('/:id', (req, res) => {
-  const movieId = req.params.id;
-  const moviePosition = movies.findIndex(movie => movie.id === movieId);
-  if (moviePosition >= 0) {
-    movies.splice(moviePosition, 1);
-  }
-
-  files.saveMovies(movies, err => {
+  controller.deleteMovie(req.params.id, (err, movies) => {
     if (err) {
       res.error(err);
     } else {
@@ -67,13 +46,7 @@ router.delete('/:id', (req, res) => {
 });
 
 router.post('/like/:id', (req, res) => {
-  const movieId = req.params.id;
-  const movie = movies.find(movie => movie.id === movieId);
-  if (movie) {
-    movie.like = true;
-  }
-
-  files.saveMovies(movies, err => {
+  controller.setLikeMovie(req.params.id, true, (err, movies) => {
     if (err) {
       res.error(err);
     } else {
@@ -83,12 +56,7 @@ router.post('/like/:id', (req, res) => {
 });
 
 router.delete('/like/:id', (req, res) => {
-  const movieId = req.params.id;
-  const movie = movies.find(movie => movie.id === movieId);
-  if (movie) {
-    movie.like = false;
-  }
-  files.saveMovies(movies, err => {
+  controller.setLikeMovie(req.params.id, false, (err, movies) => {
     if (err) {
       res.error(err);
     } else {
