@@ -1,11 +1,12 @@
-const express = require('express');
-const morgan = require('morgan');
-const request = require('superagent');
-const notifier = require('node-notifier');
-const session = require('express-session');
-const methodOverride = require('method-override');
-const compression = require('compression');
-const cors = require('cors');
+import * as express from 'express';
+import * as morgan from 'morgan';
+import * as request from 'superagent';
+import * as session from 'express-session';
+import * as methodOverride from 'method-override';
+import * as compression from 'compression';
+import * as cors from 'cors';
+import * as moviesRouter from './src/api/movies';
+
 const app = express();
 
 const corsOptions = {
@@ -15,14 +16,13 @@ const corsOptions = {
 const sessionOptions = {
   secret: '1234'
 };
-const moviesRouter = require('./src/api/movies');
 
 function errorHandler(err, req, res, next) {
   if (!err) {
     return next();
   }
   const title = `Error in ${req.method} ${req.url}`;
-  notifier.notify({ title: 'Error', message: title });
+  // notifier.notify({ title: 'Error', message: title });
   res.status(500).send('Algo se ha roto!');
 }
 
@@ -64,7 +64,7 @@ app.use(express.json());
 
 app.use('/movies', moviesRouter);
 
-app.get('/', (req, res, next) => {
+app.get('/', (req: express.Request, res: express.Response) => {
   if (req.session.views) {
     req.session.views++;
   } else {
