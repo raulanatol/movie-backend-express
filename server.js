@@ -38,8 +38,18 @@ function errorSlack(err, req, res, next) {
     });
 }
 
+function decodeBase64(str) {
+  return Buffer.from(str, 'base64').toString()
+}
+
 function authentication(req, res, next) {
   if (req.method === 'GET') {
+    return next();
+  }
+
+  const basicAuth = req.headers.authorization.split(' ')[1];
+  const userPassword = decodeBase64(basicAuth).split(':');
+  if (userPassword[0] === 'Pepe' && userPassword[1] === 'juan') {
     return next();
   }
   res.status(500).send('Permiso denegado');
