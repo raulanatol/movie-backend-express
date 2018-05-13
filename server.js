@@ -1,10 +1,9 @@
 const express = require('express');
+const files = require("./src/utils/files");
 const app = express();
 
-let movies = [
-  { id: '1', name: 'Matrix' },
-  { id: '2', name: 'El club de la lucha' }
-];
+let movies;
+files.loadMovies(moviesData => movies = moviesData);
 
 app.use(express.json());
 
@@ -31,7 +30,14 @@ app.post('/movies', (req, res) => {
   const movie = req.body;
   movie.id = `${movies.length + 1}`;
   movies.push(movie);
-  res.json(movies);
+
+  files.saveMovies(movies, err => {
+    if (err) {
+      res.error(err);
+    } else {
+      res.json(movies);
+    }
+  });
 });
 
 app.put('/movies', (req, res) => {
@@ -40,7 +46,14 @@ app.put('/movies', (req, res) => {
   if (moviePosition >= 0) {
     movies[moviePosition] = req.body;
   }
-  res.json(movies);
+
+  files.saveMovies(movies, err => {
+    if (err) {
+      res.error(err);
+    } else {
+      res.json(movies);
+    }
+  });
 });
 
 app.delete('/movies/:id', (req, res) => {
@@ -49,7 +62,14 @@ app.delete('/movies/:id', (req, res) => {
   if (moviePosition >= 0) {
     movies.splice(moviePosition, 1);
   }
-  res.json(movies);
+
+  files.saveMovies(movies, err => {
+    if (err) {
+      res.error(err);
+    } else {
+      res.json(movies);
+    }
+  });
 });
 
 app.post('/movies/like/:id', (req, res) => {
@@ -58,7 +78,14 @@ app.post('/movies/like/:id', (req, res) => {
   if (movie) {
     movie.like = true;
   }
-  res.json(movies);
+
+  files.saveMovies(movies, err => {
+    if (err) {
+      res.error(err);
+    } else {
+      res.json(movies);
+    }
+  });
 });
 
 app.delete('/movies/like/:id', (req, res) => {
@@ -67,7 +94,13 @@ app.delete('/movies/like/:id', (req, res) => {
   if (movie) {
     movie.like = false;
   }
-  res.json(movies);
+  files.saveMovies(movies, err => {
+    if (err) {
+      res.error(err);
+    } else {
+      res.json(movies);
+    }
+  });
 });
 
 app.listen(3000, () => {
