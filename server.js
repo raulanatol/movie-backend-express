@@ -4,7 +4,12 @@ const notifier = require('node-notifier');
 const session = require('express-session');
 const methodOverride = require('method-override');
 const compression = require('compression');
+const cors = require('cors');
 const app = express();
+
+const corsOptions = {
+  origin: ['http://miweb.com']
+};
 
 const sessionOptions = {
   secret: '1234'
@@ -20,6 +25,7 @@ function errorHandler(err, req, res, next) {
   res.status(500).send('Algo se ha roto!');
 }
 
+app.use(cors(corsOptions));
 app.use(morgan('combined'));
 app.use(compression());
 app.use(session(sessionOptions));
