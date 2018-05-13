@@ -38,9 +38,17 @@ function errorSlack(err, req, res, next) {
     });
 }
 
+function authentication(req, res, next) {
+  if (req.method === 'GET') {
+    return next();
+  }
+  res.status(500).send('Permiso denegado');
+}
+
 app.use(cors(corsOptions));
 app.use(morgan('combined'));
 app.use(compression());
+app.use(authentication);
 app.use(session(sessionOptions));
 app.use(express.json());
 
