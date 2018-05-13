@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "compression": "^1.7.2",
     "express": "^4.16.3",
     "express-session": "^1.15.6",
     "method-override": "^2.3.10",
