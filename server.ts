@@ -6,6 +6,7 @@ import * as methodOverride from 'method-override';
 import * as compression from 'compression';
 import * as cors from 'cors';
 import * as notifier from 'node-notifier';
+import { connect } from "mongoose";
 import * as moviesRouter from './src/api/movies';
 
 const app = express();
@@ -79,6 +80,7 @@ if (process.env.NODE_ENV === 'development') {
   app.use(errorSlack);
 }
 
+connect('mongodb://localhost:27017/eoiMovies');
 app.listen(3000, () => {
-  console.log('Ready on port 3000!');
+  console.log('Ready on port 3000!'); // tslint:disable-line
 });
