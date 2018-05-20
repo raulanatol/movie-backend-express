@@ -4,66 +4,35 @@ import { deleteMovie, getLikes, getMovie, getMovies, newMovie, setLikeMovie, upd
 const router = express.Router();
 
 router.get('/like', (req, res) => {
-  res.json(getLikes());
+  getLikes().then(movies => res.json(movies)).catch(err => res.status(500).send(err));
 });
 
 router.get('/:id', (req, res) => {
-  res.json(getMovie(req.params.id));
+  getMovie(req.params.id).then(movie => res.json(movie)).catch(err => res.status(500).send(err));
 });
 
 router.get('/', (req, res) => {
-  res.json(getMovies());
+  getMovies().then(movies => res.json(movies)).catch(err => res.status(500).send(err));
 });
 
 router.post('/', (req, res) => {
-  const movie = req.body;
-  newMovie(movie, (err, movies) => {
-    if (err) {
-      res.status(400).send(err);
-    } else {
-      res.json(movies);
-    }
-  });
+  newMovie(req.body).then(result => res.json(result)).catch(err => res.status(400).send(err));
 });
 
 router.put('/', (req, res) => {
-  updateMovie(req.body, (err, movies) => {
-    if (err) {
-      res.status(400).send(err);
-    } else {
-      res.json(movies);
-    }
-  });
+  updateMovie(req.body).then(movie => res.json(movie)).catch(err => res.status(400).send(err));
 });
 
 router.delete('/:id', (req, res) => {
-  deleteMovie(req.params.id, (err, movies) => {
-    if (err) {
-      res.status(400).send(err);
-    } else {
-      res.json(movies);
-    }
-  });
+  deleteMovie(req.params.id).then(() => res.send()).catch(err => res.status(400).send(err));
 });
 
 router.post('/like/:id', (req, res) => {
-  setLikeMovie(req.params.id, true, (err, movies) => {
-    if (err) {
-      res.status(400).send(err);
-    } else {
-      res.json(movies);
-    }
-  });
+  setLikeMovie(req.params.id, true).then(() => res.send('Done')).catch(err => res.status(400).send(err));
 });
 
 router.delete('/like/:id', (req, res) => {
-  setLikeMovie(req.params.id, false, (err, movies) => {
-    if (err) {
-      res.status(400).send(err);
-    } else {
-      res.json(movies);
-    }
-  });
+  setLikeMovie(req.params.id, false).then(() => res.send('Done')).catch(err => res.status(400).send(err));
 });
 
 export = router;

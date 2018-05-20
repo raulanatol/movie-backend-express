@@ -7,7 +7,7 @@
     "start": "node server.js",
     "old-dev": "NODE_ENV=development nodemon -e ts server.js",
     "prod": "NODE_ENV=production nodemon -e ts server.js",
-    "dev": "NODE_ENV=development ts-node server.ts",
+    "dev": "NODE_ENV=development nodemon --watch '**/*.ts' --exec ts-node server.ts",
     "lint": "tslint -p ./tsconfig.json"
   },
   "author": "",
@@ -19,6 +19,7 @@
     "express": "^4.16.3",
     "express-session": "^1.15.6",
     "method-override": "^2.3.10",
+    "mongodb": "^3.1.0-beta4",
     "morgan": "^1.9.0",
     "superagent": "^3.8.3"
   },

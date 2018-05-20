@@ -5,6 +5,7 @@ import * as session from 'express-session';
 import * as methodOverride from 'method-override';
 import * as compression from 'compression';
 import * as cors from 'cors';
+import * as notifier from 'node-notifier';
 import * as moviesRouter from './src/api/movies';
 
 const app = express();
@@ -22,20 +23,16 @@ function errorHandler(err, req, res, next) {
     return next();
   }
   const title = `Error in ${req.method} ${req.url}`;
-  // notifier.notify({ title: 'Error', message: title });
-  res.status(500).send('Algo se ha roto!');
+  notifier.notify({ title: 'Error', message: title });
+  res.status(500).send(err);
 }
 
 function errorSlack(err, req, res, next) {
   if (!err) {
     return next();
   }
-  const errorSlack = { text: `Error in ${req.method} ${req.url}` };
-  request.post('SLACK_URL')
-    .send(errorSlack)
-    .end(err => {
-      next(err);
-    });
+  const messageToSlack = { text: `Error in ${req.method} ${req.url}` };
+  request.post('SLACK_URL').send(messageToSlack).end(sendErr => next(sendErr));
 }
 
 function decodeBase64(str) {

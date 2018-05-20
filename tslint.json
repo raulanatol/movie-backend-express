@@ -8,7 +8,7 @@
       true,
       "no-public"
     ],
-    "no-console": false,
+    "no-console": true,
     "ordered-imports": false,
     "object-literal-sort-keys": false,
     "no-implicit-dependencies": [
